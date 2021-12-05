@@ -1,26 +1,51 @@
 <template>
-<form class="wrapper" @submit="submit" report-submit>
-  <div class="title">填写信息</div>
-  <ul>
-    <li>
-      <lable for>学员姓名</lable>
-      <input type="text" v-model="current.name" placeholder="请输入学员姓名" focus />
-    </li>
-    <li>
-      <lable for>手机号</lable>
-      <input type="number" v-model="current.phone" placeholder="请输入手机号" maxlength="11" />
-    </li>
-    <li>
-      <lable for>演出曲目</lable>
-      <input type="number" v-model="current.song" placeholder="请输入演出曲目" />
-    </li>
-    <li>
+  <form class="wrapper" @submit="submit" report-submit>
+    <div class="title">填写信息</div>
+    <ul>
+      <li>
+        <lable for>学员姓名</lable>
+        <input
+          type="text"
+          v-model="current.name"
+          placeholder="请输入学员姓名"
+          focus
+        />
+      </li>
+      <li>
+        <lable for>手机号</lable>
+        <input
+          type="number"
+          v-model="current.phone"
+          placeholder="请输入手机号"
+          maxlength="11"
+        />
+      </li>
+      <li>
+        <lable for>演出曲目</lable>
+        <input
+          type="number"
+          v-model="songText"
+          placeholder="请输入演出曲目"
+          disabled="true"
+          @click="showMulLinkageTwoPicker"
+        />
+        <mp-picker
+          v-model="current.song"
+          ref="mpPicker"
+          @onConfirm="onConfirm"
+          @onCancel="onCancel"
+          :pickerValueDefault="pickerValueDefault"
+          :pickerValueArray="pickerValueArray"
+        ></mp-picker>
+      </li>
+      <!-- <li>
       <lable for>邀请码</lable>
       <input type="text" v-model="current.InvitationCode" placeholder="请输入邀请码"/>
-    </li>
-  </ul>
-  <button :class="btnEnable?'': 'disable'" form-type="submit">确认</button>
-</form>
+    </li> -->
+    </ul>
+    <button :class="btnEnable ? '' : 'disable'" form-type="submit">确认</button>
+    <!-- <mpButton type="default" size="large" btnClass="mb15">默认按钮</mpButton> -->
+  </form>
   <!-- <div @click="clickHandle">
 
     <div class="userinfo" @click="bindViewTap">
@@ -56,50 +81,84 @@
 </template>
 
 <script>
-import card from '@/components/card'
+import card from "@/components/card";
 import { mapState, mapMutations, mapActions } from "vuex";
 // const moment = require("moment");
+import mpButton from "mpvue-weui/src/button";
+import mpPicker from "mpvue-weui/src/picker";
 export default {
-  data () {
+  data() {
     return {
-      motto: 'Hello miniprograme',
+      motto: "Hello miniprograme",
       userInfo: {
-        nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
-      }
-    }
+        nickName: "mpvue",
+        avatarUrl: "http://mpvue.com/assets/logo.png",
+      },
+      pickerValueArray: [
+        {
+          label: "飞机票",
+          value: 100,
+        },
+        {
+          label: "经济舱",
+          value: 101,
+        },
+        {
+          label: "商务舱",
+          value: 102,
+        },
+      ],
+      pickerValueDefault: [100],
+    };
   },
 
   components: {
-    card
+    card,
+    mpButton,
+    mpPicker,
   },
 
   methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      if (mpvuePlatform === 'wx') {
-        mpvue.switchTab({ url })
+    showMulLinkageTwoPicker() {
+      this.$refs.mpPicker.show();
+    },
+    onConfirm(e) {
+      this.current.song = e.value[0];
+    },
+    onCancel(e) {
+      console.log(e);
+    },
+    bindViewTap() {
+      const url = "../logs/main";
+      if (mpvuePlatform === "wx") {
+        mpvue.switchTab({ url });
       } else {
-        mpvue.navigateTo({ url })
+        mpvue.navigateTo({ url });
       }
     },
-    clickHandle (ev) {
-      console.log('clickHandle:', ev)
+    clickHandle(ev) {
+      console.log("clickHandle:", ev);
       // throw {message: 'custom test'}
     },
     submit(val) {
-      console.log('val: ', val);
-
-    }
+      console.log("val: ", val.detail);
+    },
   },
 
-  created () {
+  created() {
     // let app = getApp()
+    // console.log("current---", this.current);
   },
   computed: {
     ...mapState({
-      current: state => state.sign.current
+      current: (state) => state.sign.current,
     }),
+    songText() {
+      const songChange = this.pickerValueArray.find(
+        (item) => item.value === this.current.song
+      ) || { label: "" };
+      return songChange.label;
+    },
     btnEnable() {
       // 判断公司名称是否为空
       if (!this.current.name) {
@@ -117,9 +176,9 @@ export default {
         return false;
       }
       return true;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -150,28 +209,28 @@ export default {
   margin-bottom: 5px;
   border: 1px solid #ccc;
 }
-.all{
-  width:7.5rem;
-  height:1rem;
-  background-color:blue;
+.all {
+  width: 7.5rem;
+  height: 1rem;
+  background-color: blue;
 }
-.all:after{
-  display:block;
-  content:'';
-  clear:both;
+.all:after {
+  display: block;
+  content: "";
+  clear: both;
 }
-.left{
-  float:left;
-  width:3rem;
-  height:1rem;
-  background-color:red;
+.left {
+  float: left;
+  width: 3rem;
+  height: 1rem;
+  background-color: red;
 }
 
-.right{
-  float:left;
-  width:4.5rem;
-  height:1rem;
-  background-color:green;
+.right {
+  float: left;
+  width: 4.5rem;
+  height: 1rem;
+  background-color: green;
 }
 .wrapper {
   width: 100%;

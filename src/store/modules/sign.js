@@ -5,8 +5,8 @@ const state={
     current: {
       name: '',//学员姓名
       phone: '',//学员手机号
-      song: '',//演出曲目
-      InvitationCode: ''//邀请码
+      song: undefined,//演出曲目
+      // InvitationCode: ''//邀请码
     }
 }
 const mutations = {

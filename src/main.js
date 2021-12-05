@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+import 'mpvue-weui/src/style/weui.css';
 // 引入store
 import store from '@/store/index'
 Vue.config.productionTip = false
