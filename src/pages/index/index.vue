@@ -1,11 +1,34 @@
 <template>
   <form class="wrapper" @submit="submit">
-    <div class="title">填写信息</div>
+    <mp-navbar :tabs="tabs" :activeIndex='tabsChecked' @tabClick="tabClick">
+     {{  tabs[tabsChecked] }}
+    </mp-navbar>
+    <!-- <div class="weui-tab">
+      <div class="weui-navbar">
+        <block v-for="(item, index) in tabs" :key="index">
+          <div
+            :id="index"
+            :class="{ 'weui-bar__item_on': activeIndex == index }"
+            class="weui-navbar__item"
+            @click="tabClick"
+          >
+            <div class="weui-navbar__title">{{ item }}</div>
+          </div>
+        </block>
+        <div class="weui-navbar__slider" :class="navbarSliderClass"></div>
+      </div>
+      <div class="weui-tab__panel">
+        <div class="weui-tab__content" :hidden="activeIndex != 0"></div>
+        <div class="weui-tab__content" :hidden="activeIndex != 1">
+          选项二的内容
+        </div>
+      </div>
+    </div> -->
     <ul>
       <li name="name">
-        <lable for >学员姓名</lable>
+        <lable for>学员姓名</lable>
         <input
-        name="name"
+          name="name"
           type="text"
           v-model="current.name"
           placeholder="请输入学员姓名"
@@ -32,7 +55,7 @@
           @click="showMulLinkageTwoPicker"
         />
         <mp-picker
-        name="song"
+          name="song"
           v-model="current.song"
           ref="mpPicker"
           @onConfirm="onConfirm"
@@ -46,8 +69,28 @@
       <input type="text" v-model="current.InvitationCode" placeholder="请输入邀请码"/>
     </li> -->
     </ul>
-    
+
     <button :class="btnEnable ? '' : 'disable'" form-type="submit">确认</button>
+    <!-- <div class="swiper">
+      <swiper
+        class="swiper-container"
+        indicator-dots="true"
+        autoplay="true"
+        interval="3000"
+        circular="true"
+        duration="500"
+      >
+        <block v-for="(item, index) in banner" :key="index">
+          <swiper-item class="swiper-item">
+            <image class="slide-image" 	show-menu-by-longpress :src="item.imgUrl" mode="aspectFit"/>
+          </swiper-item>
+        </block>
+      </swiper>
+    </div> -->
+    <!-- <mp-navbar :tabs="['一', '二']" activeIndex=0>
+      的大幅度的
+    </mp-navbar> -->
+
     <!-- <mpButton type="default" size="large" btnClass="mb15">默认按钮</mpButton> -->
   </form>
 </template>
@@ -58,9 +101,18 @@ import { mapState, mapMutations, mapActions } from "vuex";
 // const moment = require("moment");
 import mpButton from "mpvue-weui/src/button";
 import mpPicker from "mpvue-weui/src/picker";
+import mpNavbar from "mpvue-weui/src/navbar";
 export default {
   data() {
     return {
+      tabs: ["购票", "查询票"],
+      tabsChecked: 0,
+      activeIndex: 0,
+      fontSize: 30,
+      banner: [
+        { imgUrl: "/static/images/yinyuejie.JPG" },
+        { imgUrl: "/static/images/yinyuejie.JPG" },
+      ],
       songList: [
         {
           key: 1,
@@ -157,6 +209,7 @@ export default {
     card,
     mpButton,
     mpPicker,
+    mpNavbar,
   },
 
   methods: {
@@ -186,14 +239,22 @@ export default {
     },
     submit(e) {
       // this.goAdd();
-      console.log("val: ", e.detail,this.current);
+      console.log("val: ", e.detail, this.current);
+    },
+    tabClick(e) {
+      console.log(e);
+      this.tabsChecked = e;
+      // this.activeIndex = e.currentTarget.id;
     },
   },
 
   created() {
     // let app = getApp()
     // console.log("current---", this.current);
-    this.pickerValueArray = this.songList.map(item => ({value: item.key, label: item.value}))
+    this.pickerValueArray = this.songList.map((item) => ({
+      value: item.key,
+      label: item.value,
+    }));
   },
   computed: {
     ...mapState({
@@ -223,11 +284,59 @@ export default {
       }
       return true;
     },
+    navbarSliderClass() {
+      if (this.activeIndex == 0) {
+        return "weui-navbar__slider_0";
+      }
+      if (this.activeIndex == 1) {
+        return "weui-navbar__slider_1";
+      }
+      if (this.activeIndex == 2) {
+        return "weui-navbar__slider_2";
+      }
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
+.weui-tab__content {
+  padding-top: 60px;
+  text-align: center;
+}
+.weui-navbar__slider_0 {
+  left: 29rpx;
+  transform: translateX(0);
+}
+.weui-navbar__slider_1 {
+  left: 29rpx;
+  transform: translateX(250rpx);
+}
+.weui-navbar__slider_2 {
+  left: 29rpx;
+  transform: translateX(500rpx);
+}
+.swiper {
+  width: 100%;
+  height: 500rpx;
+  // margin-top: 80rpx;
+  // 继承，完整写法：swiper-container
+  &-container {
+    width: 100%;
+    height: 100%;
+
+    .swiper-item {
+      width: 100%;
+      height: 100%;
+
+      .slide-image {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+      }
+    }
+  }
+}
 .userinfo {
   display: flex;
   flex-direction: column;
