@@ -1,10 +1,11 @@
 <template>
-  <form class="wrapper" @submit="submit" report-submit>
+  <form class="wrapper" @submit="submit">
     <div class="title">填写信息</div>
     <ul>
-      <li>
-        <lable for>学员姓名</lable>
+      <li name="name">
+        <lable for >学员姓名</lable>
         <input
+        name="name"
           type="text"
           v-model="current.name"
           placeholder="请输入学员姓名"
@@ -18,6 +19,7 @@
           v-model="current.phone"
           placeholder="请输入手机号"
           maxlength="11"
+          name="phone"
         />
       </li>
       <li>
@@ -30,6 +32,7 @@
           @click="showMulLinkageTwoPicker"
         />
         <mp-picker
+        name="song"
           v-model="current.song"
           ref="mpPicker"
           @onConfirm="onConfirm"
@@ -43,41 +46,10 @@
       <input type="text" v-model="current.InvitationCode" placeholder="请输入邀请码"/>
     </li> -->
     </ul>
+    
     <button :class="btnEnable ? '' : 'disable'" form-type="submit">确认</button>
     <!-- <mpButton type="default" size="large" btnClass="mb15">默认按钮</mpButton> -->
   </form>
-  <!-- <div @click="clickHandle">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
-
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
-    </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-
-    <div class="all">
-        <div class="left">
-        </div>
-        <div class="right">
-        </div>
-    </div>
-  </div> -->
 </template>
 
 <script>
@@ -89,26 +61,95 @@ import mpPicker from "mpvue-weui/src/picker";
 export default {
   data() {
     return {
+      songList: [
+        {
+          key: 1,
+          value: "这条街最亮的仔",
+        },
+        {
+          key: 2,
+          value: "白龙马",
+        },
+        {
+          key: 3,
+          value: "没去成学校",
+        },
+        {
+          key: 4,
+          value: "misery business",
+        },
+        {
+          key: 5,
+          value: "that is gonna hurt",
+        },
+        {
+          key: 6,
+          value: "宝贝宝贝",
+        },
+        {
+          key: 7,
+          value: "bar bar bar",
+        },
+        {
+          key: 8,
+          value: "It's my life",
+        },
+        {
+          key: 9,
+          value: "TIK TOK",
+        },
+        {
+          key: 10,
+          value: "大风吹",
+        },
+        {
+          key: 11,
+          value: "handclap",
+        },
+        {
+          key: 12,
+          value: "toxic",
+        },
+        {
+          key: 13,
+          value: "uptown funk",
+        },
+        {
+          key: 14,
+          value: "Come as you are",
+        },
+        {
+          key: 15,
+          value: "胜利",
+        },
+        {
+          key: 16,
+          value: "Whataya want from me",
+        },
+        {
+          key: 17,
+          value: "棉花眼睛",
+        },
+        {
+          key: 18,
+          value: "听我说谢谢你",
+        },
+        {
+          key: 19,
+          value: "红歌串烧",
+        },
+        {
+          key: 100,
+          value: "观众区",
+        },
+      ],
       motto: "Hello miniprograme",
       userInfo: {
         nickName: "mpvue",
         avatarUrl: "http://mpvue.com/assets/logo.png",
       },
-      pickerValueArray: [
-        {
-          label: "飞机票",
-          value: 100,
-        },
-        {
-          label: "经济舱",
-          value: 101,
-        },
-        {
-          label: "商务舱",
-          value: 102,
-        },
-      ],
-      pickerValueDefault: [100],
+      pickerValueArray: [],
+      pickerValueDefault: [],
     };
   },
 
@@ -119,6 +160,9 @@ export default {
   },
 
   methods: {
+    goAdd() {
+      wx.navigateTo({ url: "/pages/ChooseASeat/main" });
+    },
     showMulLinkageTwoPicker() {
       this.$refs.mpPicker.show();
     },
@@ -140,14 +184,16 @@ export default {
       console.log("clickHandle:", ev);
       // throw {message: 'custom test'}
     },
-    submit(val) {
-      console.log("val: ", val.detail);
+    submit(e) {
+      // this.goAdd();
+      console.log("val: ", e.detail,this.current);
     },
   },
 
   created() {
     // let app = getApp()
     // console.log("current---", this.current);
+    this.pickerValueArray = this.songList.map(item => ({value: item.key, label: item.value}))
   },
   computed: {
     ...mapState({
